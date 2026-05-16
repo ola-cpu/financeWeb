@@ -18,6 +18,7 @@
     "aiCoach": "AI Coach",
     "settings": "Settings",
     "rewards": "Rewards",
+    "fire": "FIRE System",
     "logout": "Logout"
   },
   "Rewards": {
@@ -26,5 +27,51 @@
     "yourBadges": "Your Badges",
     "level": "Level",
     "xpToLevel": "{xp} XP to Level {level}"
+  },
+  "Portfolio": {
+    "title": "Multi-Income Management",
+    "incomeTracker": "Income Tracker",
+    "passiveincome": "Passive Income",
+    "monthlyPassive": "Monthly Passive Income",
+    "financialFreedomProgression": "Financial Freedom Progress",
+    "totalCashFlow": "Total Cash Flow",
+    "salary": "Salary",
+    "freelance": "Freelance",
+    "business": "Business",
+    "crypto": "Crypto",
+    "dividends": "Dividends",
+    "other": "Other"
+  },
+  "Analysis": {
+    "title": "Risk Analysis",
+    "riskDetected": "Risk Detected",
+    "overExposure": "Over-exposure",
+    "poorDiversification": "Poor diversification",
+    "tooMuchRisk": "Too much risk",
+    "optimalAllocation": "Proposed Optimal Allocation",
+    "spendingHabits": "Spending Habits",
+    "impulsiveSpending": "Impulsive Spending",
+    "unnecessarySubscriptions": "Unnecessary Subscriptions",
+    "overconsumption": "Overconsumption",
+    "dangerousDebt": "Dangerous Debt",
+    "creditDependency": "Credit Dependency"
+  },
+  "Coach": {
+    "title": "Financial Psychological Coach",
+    "description": "Analyze your emotional behaviors and improve your financial discipline.",
+    "emotionalSpending": "Emotional Spending",
+    "fearOfInvesting": "Fear of Investing",
+    "impulsivity": "Financial Impulsivity",
+    "disciplineRoutines": "Discipline Routines",
+    "getAdvice": "Get Coach Advice"
+  },
+  "FIRE": {
+    "title": "FIRE System (FEU)",
+    "description": "Calculate when you can retire based on your passive income.",
+    "retirementAge": "Estimated Retirement Age",
+    "capitalNecessary": "Necessary Capital",
+    "requiredPassiveIncome": "Required Passive Income",
+    "safeWithdrawalRate": "Safe Withdrawal Rate",
+    "monthsToRetire": "Months to retirement"
   }
 }

@@ -11,6 +11,7 @@ export enum AssetType {
   BUSINESS = 'business',
   PRECIOUS_METALS = 'precious_metals',
   INVESTMENT_FUNDS = 'investment_funds',
+  BONDS = 'bonds',
 }
 
 @Entity('assets')
