@@ -38,14 +38,68 @@ export class AiService {
   }
 
   async analyzeHabits(transactions: any[]) {
-    // Logic to detect dangerous spending or suggest improvements
-    const totalExpenses = transactions
-      .filter(t => t.type === 'expense')
-      .reduce((sum, t) => sum + t.amount, 0);
+    const expenses = transactions.filter((t) => t.type === 'expense');
+    const totalExpenses = expenses.reduce((sum, t) => sum + t.amount, 0);
 
-    if (totalExpenses > 0) {
-      return "Your gold flows away. Examine each expense to see if it is truly necessary.";
+    if (totalExpenses === 0) return 'You manage your purse well.';
+
+    const warnings = [];
+
+    // 1. Impulsive spending detection (many small transactions in same categories)
+    const impulsiveCategories = ['Shopping', 'Entertainment', 'Fast Food'];
+    const impulsiveExpenses = expenses.filter((t) => impulsiveCategories.includes(t.category));
+    if (impulsiveExpenses.length > 5) {
+      warnings.push('Impulsive spending detected. "Seek not to satisfy every whim that entereth thy mind."');
     }
-    return "You manage your purse well.";
+
+    // 2. Unnecessary subscriptions
+    const subscriptions = expenses.filter(
+      (t) => t.description.toLowerCase().includes('subscription') || t.description.toLowerCase().includes('netflix'),
+    );
+    if (subscriptions.length > 3) {
+      warnings.push('Too many subscriptions. "Examine each expense to see if it is truly necessary."');
+    }
+
+    // 3. Overconsumption
+    if (totalExpenses > 5000) {
+      warnings.push('Overconsumption detected. Your lifestyle may be exceeding your means.');
+    }
+
+    // 4. Dangerous debt / Credit dependency
+    const debtPayments = expenses.filter(
+      (t) =>
+        t.description.toLowerCase().includes('credit card') ||
+        t.description.toLowerCase().includes('interest') ||
+        t.description.toLowerCase().includes('loan'),
+    );
+    if (debtPayments.length > 2) {
+      warnings.push('Dependency on credit detected. "The borrower is servant to the lender."');
+    }
+
+    return warnings.length > 0 ? warnings.join(' ') : 'Your gold flows wisely.';
+  }
+
+  async getPsychologicalAdvice(userData: any) {
+    if (!this.openai) {
+      return this.getMockPsychologicalAdvice();
+    }
+
+    const systemPrompt = `You are a Financial Behavioral Coach. Analyze the user's situation and provide advice on:
+    - Emotional spending patterns
+    - Fear of investing
+    - Impulsivity
+    - Financial discipline routines
+    Inspiried by Behavioral Finance. User situation: ${JSON.stringify(userData)}. Keep it professional yet empathetic.`;
+
+    const response = await this.openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'system', content: systemPrompt }],
+    });
+
+    return response.choices[0].message.content;
+  }
+
+  private getMockPsychologicalAdvice() {
+    return "[Mock Psych Coach] Discipline is the bridge between goals and accomplishment. Establish a routine of 'paying yourself first' to overcome the fear of investing and curb emotional spending.";
   }
 }

@@ -47,4 +47,9 @@ export class AssetsController {
   ) {
     return this.assetsService.simulateDCA(body.initialAmount, body.monthlyContribution, body.annualReturn, body.years);
   }
+
+  @Get('user/:userId/optimal-allocation')
+  getOptimalAllocation(@Param('userId') userId: string) {
+    return this.assetsService.getOptimalAllocation(+userId);
+  }
 }

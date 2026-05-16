@@ -14,4 +14,9 @@ export class AiController {
   analyzeHabits(@Body() body: { transactions: any[] }) {
     return this.aiService.analyzeHabits(body.transactions);
   }
+
+  @Post('psychological-advice')
+  getPsychologicalAdvice(@Body() body: { userData: any }) {
+    return this.aiService.getPsychologicalAdvice(body.userData);
+  }
 }

@@ -42,12 +42,55 @@ export class AssetsService {
     const fireNumber = annualExpenses * 25; // 4% rule
     const progress = (netWorth / fireNumber) * 100;
 
+    const safeWithdrawalRate = 0.04;
+    const requiredPassiveIncome = annualExpenses / 12;
+
+    // Estimate retirement age (simple calculation)
+    const user = await this.assetsRepository.manager.findOne('User', { where: { id: userId } }) as any;
+    const monthlySavings = (user?.monthlyIncome || 0) * ((user?.savingsRate || 0) / 100);
+    const monthsToFIRE = monthlySavings > 0 ? (fireNumber - netWorth) / monthlySavings : Infinity;
+
     return {
       currentNetWorth: netWorth,
       fireNumber,
       progress,
       isFireReached: netWorth >= fireNumber,
+      requiredPassiveIncome,
+      safeWithdrawalRate,
+      estimatedMonthsToRetire: monthsToFIRE !== Infinity ? Math.round(monthsToFIRE) : 'N/A',
     };
+  }
+
+  async getOptimalAllocation(userId: number) {
+    const user = await this.assetsRepository.manager.findOne('User', { where: { id: userId } }) as any;
+    const riskLevel = user?.riskLevel || 5; // 1-10
+
+    // Simplified optimal allocation logic
+    let allocation;
+    if (riskLevel <= 3) {
+      allocation = [
+        { type: 'Bonds', value: 50 },
+        { type: 'ETF', value: 30 },
+        { type: 'Cash', value: 20 },
+      ];
+    } else if (riskLevel <= 7) {
+      allocation = [
+        { type: 'Stocks', value: 40 },
+        { type: 'ETF', value: 30 },
+        { type: 'Real Estate', value: 20 },
+        { type: 'Bonds', value: 10 },
+      ];
+    } else {
+      allocation = [
+        { type: 'Stocks', value: 40 },
+        { type: 'Crypto', value: 20 },
+        { type: 'Business', value: 20 },
+        { type: 'Real Estate', value: 15 },
+        { type: 'Cash', value: 5 },
+      ];
+    }
+
+    return allocation;
   }
 
   async simulateDCA(initialAmount: number, monthlyContribution: number, annualReturn: number, years: number) {

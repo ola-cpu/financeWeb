@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { LayoutDashboard, Briefcase, MessageSquare, Settings, PieChart, LogOut, Award } from 'lucide-react';
+import { LayoutDashboard, Briefcase, MessageSquare, Settings, PieChart, LogOut, Award, Target } from 'lucide-react';
 import {Link} from '@/i18n/routing';
 import {useTranslations} from 'next-intl';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -13,6 +13,7 @@ export function Sidebar() {
     { icon: <LayoutDashboard size={20} />, label: t('dashboard'), href: '/' },
     { icon: <Briefcase size={20} />, label: t('portfolio'), href: '/portfolio' },
     { icon: <PieChart size={20} />, label: t('analysis'), href: '/analysis' },
+    { icon: <Target size={20} />, label: t('fire'), href: '/fire' },
     { icon: <Award size={20} />, label: t('rewards'), href: '/rewards' },
     { icon: <MessageSquare size={20} />, label: t('aiCoach'), href: '/coach' },
     { icon: <Settings size={20} />, label: t('settings'), href: '/settings' },

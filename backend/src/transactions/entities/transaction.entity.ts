@@ -5,6 +5,12 @@ export enum TransactionType {
   INCOME = 'income',
   EXPENSE = 'expense',
   INVESTMENT = 'investment',
+  SALARY = 'salary',
+  FREELANCE = 'freelance',
+  BUSINESS = 'business',
+  PASSIVE_INCOME = 'passive_income',
+  CRYPTO = 'crypto_income',
+  DIVIDENDS = 'dividends',
 }
 
 @Entity('transactions')

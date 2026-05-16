@@ -18,6 +18,7 @@
     "aiCoach": "Coach IA",
     "settings": "Paramètres",
     "rewards": "Récompenses",
+    "fire": "Système FEU",
     "logout": "Déconnexion"
   },
   "Rewards": {
@@ -26,5 +27,51 @@
     "yourBadges": "Vos Badges",
     "level": "Niveau",
     "xpToLevel": "{xp} XP vers le Niveau {level}"
+  },
+  "Portfolio": {
+    "title": "Gestion Multi-Revenus",
+    "incomeTracker": "Tracker de Revenus",
+    "passiveincome": "Revenus Passifs",
+    "monthlyPassive": "Revenus Passifs Mensuels",
+    "financialFreedomProgression": "Progression vers la Liberté Financière",
+    "totalCashFlow": "Flux de Trésorerie Total",
+    "salary": "Salaire",
+    "freelance": "Freelance",
+    "business": "Entreprise",
+    "crypto": "Crypto",
+    "dividends": "Dividendes",
+    "other": "Autres"
+  },
+  "Analysis": {
+    "title": "Analyse de Risque",
+    "riskDetected": "Risque Détecté",
+    "overExposure": "Sur-exposition",
+    "poorDiversification": "Mauvaise diversification",
+    "tooMuchRisk": "Trop de risque",
+    "optimalAllocation": "Allocation Optimale Proposée",
+    "spendingHabits": "Habitudes de Dépenses",
+    "impulsiveSpending": "Dépenses Impulsives",
+    "unnecessarySubscriptions": "Abonnements Inutiles",
+    "overconsumption": "Surconsommation",
+    "dangerousDebt": "Dette Dangereuse",
+    "creditDependency": "Dépendance au Crédit"
+  },
+  "Coach": {
+    "title": "Coach Psychologique Financier",
+    "description": "Analysez vos comportements émotionnels et améliorez votre discipline financière.",
+    "emotionalSpending": "Dépenses Émotionnelles",
+    "fearOfInvesting": "Peur d'Investir",
+    "impulsivity": "Impulsivité Financière",
+    "disciplineRoutines": "Routines de Discipline",
+    "getAdvice": "Demander conseil au Coach"
+  },
+  "FIRE": {
+    "title": "Système FEU (FIRE)",
+    "description": "Calculez quand vous pourrez prendre votre retraite grâce à vos revenus passifs.",
+    "retirementAge": "Âge de Retraite Estimé",
+    "capitalNecessary": "Capital Nécessaire",
+    "requiredPassiveIncome": "Revenus Passifs Requis",
+    "safeWithdrawalRate": "Taux de Retrait Sécurisé",
+    "monthsToRetire": "Mois restants avant la retraite"
   }
 }
