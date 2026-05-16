@@ -49,13 +49,13 @@ export default function FIREPage() {
                     />
                     <MetricCard
                         title={t('capitalNecessary')}
-                        value={`$${fireData.fireNumber.toLocaleString()}`}
+                        value={`${fireData.fireNumber.toLocaleString()} FCFA`}
                         icon={<Landmark className="text-purple-500" />}
                         description="4% rule target"
                     />
                     <MetricCard
                         title={t('requiredPassiveIncome')}
-                        value={`$${Math.round(fireData.requiredPassiveIncome).toLocaleString()}`}
+                        value={`${Math.round(fireData.requiredPassiveIncome).toLocaleString()} FCFA`}
                         icon={<TrendingUp className="text-green-500" />}
                         description="Monthly target"
                     />
