@@ -40,6 +40,9 @@
     "business": "Entreprise",
     "crypto": "Crypto",
     "dividends": "Dividendes",
+    "mobileMoney": "Mobile Money",
+    "tontine": "Tontine",
+    "communitySavings": "Épargne Communautaire",
     "other": "Autres"
   },
   "Analysis": {

@@ -11,6 +11,9 @@ export enum TransactionType {
   PASSIVE_INCOME = 'passive_income',
   CRYPTO = 'crypto_income',
   DIVIDENDS = 'dividends',
+  MOBILE_MONEY_TRANSFER = 'mobile_money_transfer',
+  TONTINE_CONTRIBUTION = 'tontine_contribution',
+  COMMUNITY_SAVINGS = 'community_savings',
 }
 
 @Entity('transactions')

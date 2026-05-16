@@ -11,10 +11,10 @@ export function DashboardOverview({ data }: any) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <Card title={t('netWorth')} value={`$${netWorth.toLocaleString()}`} change={monthlyChange} icon={<Wallet className="text-blue-500" />} />
+      <Card title={t('netWorth')} value={`${netWorth.toLocaleString()} FCFA`} change={monthlyChange} icon={<Wallet className="text-blue-500" />} />
       <Card title={t('healthScore')} value={`${healthScore}/100`} description={t('babylonianCompliance')} icon={<Shield className="text-green-500" />} />
       <Card title={t('savingsRate')} value="15%" description={t('savingsGoal')} icon={<Target className="text-yellow-500" />} />
-      <Card title={t('investments')} value="$42,000" change="+5.2%" icon={<TrendingUp className="text-purple-500" />} />
+      <Card title={t('investments')} value="42,000 FCFA" change="+5.2%" icon={<TrendingUp className="text-purple-500" />} />
     </div>
   );
 }
@@ -73,7 +73,7 @@ export function WealthProgressionChart({ data }: any) {
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
           <XAxis dataKey="name" stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />
-          <YAxis stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value/1000}k`} />
+          <YAxis stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value/1000}k FCFA`} />
           <Tooltip
              contentStyle={{ backgroundColor: '#1F2937', border: 'none', borderRadius: '8px', color: '#fff' }}
              itemStyle={{ color: '#fff' }}
