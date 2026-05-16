@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Asset } from '../../assets/entities/asset.entity';
 import { Transaction } from '../../transactions/entities/transaction.entity';
+import { Badge } from './badge.entity';
 
 @Entity('users')
 export class User {
@@ -22,11 +23,21 @@ export class User {
   @Column({ type: 'float', default: 10 })
   savingsRate: number; // Percentage, inspired by Richest Man in Babylon (min 10%)
 
+  @Column({ default: 1 })
+  level: number;
+
+  @Column({ default: 0 })
+  xp: number;
+
   @OneToMany(() => Asset, (asset: Asset) => asset.user)
   assets: Asset[];
 
   @OneToMany(() => Transaction, (transaction: Transaction) => transaction.user)
   transactions: Transaction[];
+
+  @ManyToMany(() => Badge, (badge: Badge) => badge.users)
+  @JoinTable()
+  badges: Badge[];
 
   @CreateDateColumn()
   createdAt: Date;

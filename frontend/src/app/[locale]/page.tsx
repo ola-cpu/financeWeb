@@ -1,8 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DashboardOverview, WealthProgressionChart, AssetAllocationChart } from '@/components/dashboard/Overview';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { LevelProgress } from '@/components/rewards/LevelProgress';
+import { useTranslations } from 'next-intl';
+import { gamificationApi } from '@/lib/api';
 
 const mockProgression = [
   { name: 'Jan', value: 10000 },
@@ -22,20 +25,42 @@ const mockAllocation = [
 ];
 
 export default function DashboardPage() {
+  const t = useTranslations('Dashboard');
+  const [progress, setProgress] = useState<any>(null);
   const [data, setData] = useState({
     netWorth: 54200,
     monthlyChange: '+12.5%',
     healthScore: 85,
   });
 
+  useEffect(() => {
+    async function fetchProgress() {
+      try {
+        const response = await gamificationApi.getProgress();
+        setProgress(response.data);
+      } catch (error) {
+        console.error('Failed to fetch gamification progress', error);
+      }
+    }
+    fetchProgress();
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar />
       <main className="flex-1 p-8">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold dark:text-white text-gray-900">Financial Fortress</h1>
-          <p className="text-gray-500 dark:text-gray-400">Welcome back, Arkad. Your wealth is growing.</p>
+          <h1 className="text-3xl font-bold dark:text-white text-gray-900">{t('title')}</h1>
+          <p className="text-gray-500 dark:text-gray-400">{t('welcome', {name: 'Arkad'})}</p>
         </header>
+
+        {progress && (
+          <LevelProgress
+            level={progress.level}
+            xp={progress.xp}
+            xpToNextLevel={progress.xpToNextLevel}
+          />
+        )}
 
         <DashboardOverview data={data} />
 

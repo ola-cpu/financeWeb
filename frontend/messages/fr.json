@@ -1,0 +1,30 @@
+{
+  "Dashboard": {
+    "title": "Forteresse Financière",
+    "welcome": "Bon retour, {name}. Votre richesse fructifie.",
+    "netWorth": "Valeur Nette",
+    "healthScore": "Score de Santé",
+    "savingsRate": "Taux d'Épargne",
+    "investments": "Investissements",
+    "wealthProgression": "Progression du Patrimoine",
+    "assetAllocation": "Allocation des Actifs",
+    "babylonianCompliance": "Conformité Babylonienne",
+    "savingsGoal": "Objectif: 10% min"
+  },
+  "Sidebar": {
+    "dashboard": "Tableau de Bord",
+    "portfolio": "Portefeuille",
+    "analysis": "Analyse",
+    "aiCoach": "Coach IA",
+    "settings": "Paramètres",
+    "rewards": "Récompenses",
+    "logout": "Déconnexion"
+  },
+  "Rewards": {
+    "title": "Récompenses",
+    "description": "Suivez vos progrès et collectionnez des badges tout en bâtissant votre patrimoine.",
+    "yourBadges": "Vos Badges",
+    "level": "Niveau",
+    "xpToLevel": "{xp} XP vers le Niveau {level}"
+  }
+}

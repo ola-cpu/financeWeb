@@ -11,7 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
 import { Asset } from './assets/entities/asset.entity';
 import { Transaction } from './transactions/entities/transaction.entity';
-import { AuthModule } from './auth/auth.module';
+import { Badge } from './users/entities/badge.entity';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { AuthModule } from './auth/auth.module';
         username: configService.get<string>('DB_USERNAME', 'babylon'),
         password: configService.get<string>('DB_PASSWORD', 'babylon'),
         database: configService.get<string>('DB_NAME', 'babylon_db'),
-        entities: [User, Asset, Transaction],
+        entities: [User, Asset, Transaction, Badge],
         synchronize: true, // Only for development
       }),
       inject: [ConfigService],

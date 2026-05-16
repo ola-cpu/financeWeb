@@ -1,0 +1,30 @@
+{
+  "Dashboard": {
+    "title": "Financial Fortress",
+    "welcome": "Welcome back, {name}. Your wealth is growing.",
+    "netWorth": "Net Worth",
+    "healthScore": "Health Score",
+    "savingsRate": "Savings Rate",
+    "investments": "Investments",
+    "wealthProgression": "Wealth Progression",
+    "assetAllocation": "Asset Allocation",
+    "babylonianCompliance": "Babylonian compliance",
+    "savingsGoal": "Goal: 10% min"
+  },
+  "Sidebar": {
+    "dashboard": "Dashboard",
+    "portfolio": "Portfolio",
+    "analysis": "Analysis",
+    "aiCoach": "AI Coach",
+    "settings": "Settings",
+    "rewards": "Rewards",
+    "logout": "Logout"
+  },
+  "Rewards": {
+    "title": "Rewards",
+    "description": "Track your progress and collect badges as you build your wealth.",
+    "yourBadges": "Your Badges",
+    "level": "Level",
+    "xpToLevel": "{xp} XP to Level {level}"
+  }
+}

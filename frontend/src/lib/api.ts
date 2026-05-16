@@ -1,23 +1,23 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
 });
 
-export const dashboardApi = {
-  getOverview: (userId: number) => api.get(`/users/${userId}`),
-  getHealth: (userId: number) => api.get(`/users/${userId}/babylonian-health`),
-};
+// Add interceptor to add token to requests
+api.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
 
-export const portfolioApi = {
-  getAssets: (userId: number) => api.get(`/assets/user/${userId}`),
-  getNetWorth: (userId: number) => api.get(`/assets/user/${userId}/net-worth`),
-  simulateDCA: (data: any) => api.post('/assets/simulate-dca', data),
-};
-
-export const aiApi = {
-  getAdvice: (userData: any, userQuestion: string) => api.post('/ai/advice', { userData, userQuestion }),
-  analyzeHabits: (transactions: any[]) => api.post('/ai/analyze-habits', { transactions }),
+export const gamificationApi = {
+  getProgress: () => api.get('/gamification/progress'),
+  checkBadges: () => api.post('/gamification/check-badges'),
 };
 
 export default api;
