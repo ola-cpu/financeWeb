@@ -2,17 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Transaction, TransactionType } from './entities/transaction.entity';
+import { GamificationService } from '../users/gamification.service';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @InjectRepository(Transaction)
     private transactionsRepository: Repository<Transaction>,
+    private gamificationService: GamificationService,
   ) {}
 
   async create(transactionData: Partial<Transaction>): Promise<Transaction> {
-    const transaction = this.transactionsRepository.create(transactionData);
-    return this.transactionsRepository.save(transaction);
+    const transaction = await this.transactionsRepository.save(this.transactionsRepository.create(transactionData));
+
+    if (transaction.user) {
+      const userId = typeof transaction.user === 'number' ? transaction.user : transaction.user.id;
+      await this.gamificationService.addXP(userId, 10);
+      await this.gamificationService.checkAndAwardBadges(userId);
+    }
+
+    return transaction;
   }
 
   async findAllByUserId(userId: number): Promise<Transaction[]> {
