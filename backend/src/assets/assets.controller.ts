@@ -11,6 +11,21 @@ export class AssetsController {
     return this.assetsService.create(assetData);
   }
 
+  @Get('user/:userId/net-worth')
+  getNetWorth(@Param('userId') userId: string) {
+    return this.assetsService.calculateNetWorth(+userId);
+  }
+
+  @Get('user/:userId/optimal-allocation')
+  getOptimalAllocation(@Param('userId') userId: string) {
+    return this.assetsService.getOptimalAllocation(+userId);
+  }
+
+  @Post('user/:userId/fire-status')
+  getFIREStatus(@Param('userId') userId: string, @Body('annualExpenses') annualExpenses: number) {
+    return this.assetsService.calculateFIREStatus(+userId, annualExpenses);
+  }
+
   @Get('user/:userId')
   findAll(@Param('userId') userId: string) {
     return this.assetsService.findAllByUserId(+userId);
@@ -31,25 +46,10 @@ export class AssetsController {
     return this.assetsService.remove(+id);
   }
 
-  @Get('user/:userId/net-worth')
-  getNetWorth(@Param('userId') userId: string) {
-    return this.assetsService.calculateNetWorth(+userId);
-  }
-
-  @Post('user/:userId/fire-status')
-  getFIREStatus(@Param('userId') userId: string, @Body('annualExpenses') annualExpenses: number) {
-    return this.assetsService.calculateFIREStatus(+userId, annualExpenses);
-  }
-
   @Post('simulate-dca')
   simulateDCA(
     @Body() body: { initialAmount: number; monthlyContribution: number; annualReturn: number; years: number }
   ) {
     return this.assetsService.simulateDCA(body.initialAmount, body.monthlyContribution, body.annualReturn, body.years);
-  }
-
-  @Get('user/:userId/optimal-allocation')
-  getOptimalAllocation(@Param('userId') userId: string) {
-    return this.assetsService.getOptimalAllocation(+userId);
   }
 }
