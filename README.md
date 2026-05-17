@@ -30,8 +30,25 @@ Le projet est divisé en deux parties principales :
 
 ### 1. Base de Données
 
-Créez une base de données PostgreSQL nommée `babylon_db`.
-L'application utilise par défaut les identifiants suivants (configurables via variables d'environnement) :
+L'application utilise PostgreSQL. Vous devez créer un utilisateur avec les permissions de connexion et une base de données.
+
+#### Option Rapide (Linux/macOS)
+Exécutez le script de configuration fourni dans le dossier backend :
+```bash
+cd backend
+./scripts/setup-db.sh
+```
+
+#### Configuration Manuelle
+Si vous préférez configurer manuellement, exécutez les commandes suivantes dans votre terminal (en tant qu'utilisateur postgres) :
+```sql
+CREATE USER babylon WITH PASSWORD 'babylon' LOGIN;
+CREATE DATABASE babylon_db OWNER babylon;
+```
+
+**Note importante :** Assurez-vous que l'utilisateur a l'attribut `LOGIN`, sinon vous rencontrerez une erreur "role is not permitted to log in".
+
+L'application utilise par défaut les identifiants suivants (configurables via `.env`) :
 - **Utilisateur :** `babylon`
 - **Mot de passe :** `babylon`
 - **Base de données :** `babylon_db`
