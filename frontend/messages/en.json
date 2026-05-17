@@ -76,5 +76,9 @@
     "requiredPassiveIncome": "Required Passive Income",
     "safeWithdrawalRate": "Safe Withdrawal Rate",
     "monthsToRetire": "Months to retirement"
+  },
+  "Settings": {
+    "title": "Settings",
+    "description": "Manage your account preferences."
   }
 }

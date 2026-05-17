@@ -41,9 +41,9 @@ function Card({ title, value, change, description, icon }: any) {
 export function AssetAllocationChart({ data }: any) {
   const t = useTranslations('Dashboard');
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 h-[400px]">
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 h-[400px] min-h-[400px]">
       <h3 className="text-lg font-semibold mb-4 dark:text-white">{t('assetAllocation')}</h3>
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="99%" height="100%">
         <PieChart>
           <Pie
             data={data}
@@ -68,9 +68,9 @@ export function AssetAllocationChart({ data }: any) {
 export function WealthProgressionChart({ data }: any) {
   const t = useTranslations('Dashboard');
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 h-[400px]">
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 h-[400px] min-h-[400px]">
       <h3 className="text-lg font-semibold mb-4 dark:text-white">{t('wealthProgression')}</h3>
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="99%" height="100%">
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
           <XAxis dataKey="name" stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />

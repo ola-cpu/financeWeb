@@ -39,7 +39,7 @@ export default function FIREPage() {
 
         {loading ? (
             <div className="text-center p-12 dark:text-white">Calculating your path to freedom...</div>
-        ) : (
+        ) : fireData ? (
             <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                     <MetricCard
@@ -92,6 +92,8 @@ export default function FIREPage() {
                     </p>
                 </div>
             </>
+        ) : (
+            <div className="text-center p-12 text-red-500">Failed to load FIRE data. Please try again later.</div>
         )}
 
         <div className="mt-8 p-6 bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-100 dark:border-blue-900/20">

@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -6,6 +6,8 @@ import { Badge } from './entities/badge.entity';
 
 @Injectable()
 export class GamificationService implements OnModuleInit {
+  private readonly logger = new Logger(GamificationService.name);
+
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
@@ -96,7 +98,16 @@ export class GamificationService implements OnModuleInit {
       where: { id: userId },
       relations: ['badges']
     });
-    if (!user) throw new Error('User not found');
+
+    if (!user) {
+      this.logger.warn(`User with ID ${userId} not found, returning default progress`);
+      return {
+        level: 1,
+        xp: 0,
+        xpToNextLevel: 100,
+        badges: []
+      };
+    }
 
     return {
       level: user.level,

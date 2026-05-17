@@ -40,6 +40,13 @@ export default function DashboardPage() {
         setProgress(response.data);
       } catch (error) {
         console.error('Failed to fetch gamification progress', error);
+        // Fallback for demo if API fails
+        setProgress({
+          level: 1,
+          xp: 0,
+          xpToNextLevel: 100,
+          badges: []
+        });
       }
     }
     fetchProgress();

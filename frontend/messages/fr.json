@@ -76,5 +76,9 @@
     "requiredPassiveIncome": "Revenus Passifs Requis",
     "safeWithdrawalRate": "Taux de Retrait Sécurisé",
     "monthsToRetire": "Mois restants avant la retraite"
+  },
+  "Settings": {
+    "title": "Paramètres",
+    "description": "Gérez vos préférences de compte."
   }
 }
