@@ -1,7 +1,9 @@
 import React from 'react';
 import { Plus, Trash2, Edit2, Info } from 'lucide-react';
+import { useLocale } from 'next-intl';
 
 export function AssetList({ assets, onDelete }: any) {
+  const locale = useLocale();
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
       <div className="overflow-x-auto">
@@ -23,7 +25,7 @@ export function AssetList({ assets, onDelete }: any) {
                 <td className="px-6 py-4">
                   <span className="px-2 py-1 bg-gray-100 dark:bg-gray-600 rounded text-xs">{asset.type}</span>
                 </td>
-                <td className="px-6 py-4">{asset.value.toLocaleString()} FCFA</td>
+                <td className="px-6 py-4">{asset.value.toLocaleString(locale)} FCFA</td>
                 <td className="px-6 py-4 text-green-500">+{asset.expectedYield}%</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-1">
