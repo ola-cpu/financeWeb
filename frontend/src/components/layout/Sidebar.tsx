@@ -1,8 +1,23 @@
 'use client';
 
 import React from 'react';
-import { LayoutDashboard, Briefcase, MessageSquare, Settings, PieChart, LogOut, Award, Target } from 'lucide-react';
-import {Link} from '@/i18n/routing';
+import {
+  LayoutDashboard,
+  Briefcase,
+  MessageSquare,
+  Settings,
+  PieChart,
+  LogOut,
+  Award,
+  Target,
+  PiggyBank,
+  Wallet,
+  ArrowUpRight,
+  ArrowDownRight,
+  Users,
+  Bitcoin,
+} from 'lucide-react';
+import { Link } from '@/i18n/routing';
 import {useTranslations} from 'next-intl';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -11,6 +26,12 @@ export function Sidebar() {
 
   const menuItems = [
     { icon: <LayoutDashboard size={20} />, label: t('dashboard'), href: '/' },
+    { icon: <Wallet size={20} />, label: t('budget'), href: '/budget' },
+    { icon: <PiggyBank size={20} />, label: t('savings'), href: '/savings' },
+    { icon: <ArrowUpRight size={20} />, label: t('incomes'), href: '/incomes' },
+    { icon: <ArrowDownRight size={20} />, label: t('expenses'), href: '/expenses' },
+    { icon: <Users size={20} />, label: t('tontine'), href: '/tontine' },
+    { icon: <Bitcoin size={20} />, label: t('crypto'), href: '/crypto' },
     { icon: <Briefcase size={20} />, label: t('portfolio'), href: '/portfolio' },
     { icon: <PieChart size={20} />, label: t('analysis'), href: '/analysis' },
     { icon: <Target size={20} />, label: t('fire'), href: '/fire' },

@@ -19,4 +19,14 @@ export class AiController {
   getPsychologicalAdvice(@Body() body: { userData: any }) {
     return this.aiService.getPsychologicalAdvice(body.userData);
   }
+
+  @Post('analyze-expenses')
+  analyzeExpenses(@Body() body: { transactions: any[] }) {
+    return this.aiService.analyzeExpenses(body.transactions);
+  }
+
+  @Post('budget-alerts')
+  getBudgetAlerts(@Body() body: { budgetStatus: any[] }) {
+    return this.aiService.getBudgetAlerts(body.budgetStatus);
+  }
 }

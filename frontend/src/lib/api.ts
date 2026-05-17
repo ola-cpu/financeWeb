@@ -34,7 +34,10 @@ export const transactionsApi = {
 export const aiApi = {
   getAdvice: (userData: any, userQuestion: string) => api.post('/ai/advice', { userData, userQuestion }),
   analyzeHabits: (transactions: any[]) => api.post('/ai/analyze-habits', { transactions }),
+  analyzeExpenses: (transactions: any[]) => api.post('/ai/analyze-expenses', { transactions }),
+  getBudgetAlerts: (budgetStatus: any[]) => api.post('/ai/budget-alerts', { budgetStatus }),
   getPsychologicalAdvice: (userData: any) => api.post('/ai/psychological-advice', { userData }),
 };
 
+export const axiosInstance = api;
 export default api;

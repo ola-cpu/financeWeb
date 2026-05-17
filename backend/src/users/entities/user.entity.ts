@@ -29,6 +29,12 @@ export class User {
   @Column({ default: 0 })
   xp: number;
 
+  @Column({ type: 'float', default: 0 })
+  babylonScore: number;
+
+  @Column({ type: 'jsonb', nullable: true })
+  rulesStatus: any;
+
   @OneToMany(() => Asset, (asset: Asset) => asset.user)
   assets: Asset[];
 

@@ -1,21 +1,71 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { Wallet, TrendingUp, Shield, Target } from 'lucide-react';
-import {useTranslations, useLocale} from 'next-intl';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  Legend,
+} from 'recharts';
+import { Wallet, TrendingUp, Shield, Target, PiggyBank, ArrowDownCircle, ArrowUpCircle, Banknote } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
 export function DashboardOverview({ data }: any) {
   const t = useTranslations('Dashboard');
   const locale = useLocale();
-  const { netWorth, monthlyChange, healthScore, assetAllocation } = data;
+  const {
+    netWorth = 54200,
+    monthlyChange = '+12.5%',
+    healthScore = 85,
+    totalSavings = 12500,
+    budgetRemaining = 45000,
+    passiveIncome = 5000,
+  } = data;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <Card title={t('netWorth')} value={`${netWorth.toLocaleString(locale)} FCFA`} change={monthlyChange} icon={<Wallet className="text-blue-500" />} />
-      <Card title={t('healthScore')} value={`${healthScore}/100`} description={t('babylonianCompliance')} icon={<Shield className="text-green-500" />} />
-      <Card title={t('savingsRate')} value="15%" description={t('savingsGoal')} icon={<Target className="text-yellow-500" />} />
-      <Card title={t('investments')} value={`${(42000).toLocaleString(locale)} FCFA`} change="+5.2%" icon={<TrendingUp className="text-purple-500" />} />
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
+      <Card
+        title={t('netWorth')}
+        value={`${netWorth.toLocaleString(locale)} FCFA`}
+        change={monthlyChange}
+        icon={<Wallet className="text-blue-500" />}
+      />
+      <Card
+        title={t('healthScore')}
+        value={`${healthScore}/100`}
+        description={t('babylonianCompliance')}
+        icon={<Shield className="text-green-500" />}
+      />
+      <Card
+        title="Total Épargne"
+        value={`${totalSavings.toLocaleString(locale)} FCFA`}
+        icon={<PiggyBank className="text-teal-500" />}
+      />
+      <Card
+        title="Budget Restant"
+        value={`${budgetRemaining.toLocaleString(locale)} FCFA`}
+        icon={<Banknote className="text-orange-500" />}
+      />
+      <Card
+        title="Revenus Passifs"
+        value={`${passiveIncome.toLocaleString(locale)} FCFA`}
+        icon={<TrendingUp className="text-purple-500" />}
+      />
+      <Card
+        title={t('savingsRate')}
+        value="15%"
+        description={t('savingsGoal')}
+        icon={<Target className="text-yellow-500" />}
+      />
     </div>
   );
 }
@@ -69,18 +119,59 @@ export function WealthProgressionChart({ data }: any) {
   const t = useTranslations('Dashboard');
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 h-[400px] min-h-[400px]">
-      <h3 className="text-lg font-semibold mb-4 dark:text-white">{t('wealthProgression')}</h3>
+      <h3 className="text-lg font-semibold mb-4 dark:text-white">Évolution du Patrimoine</h3>
       <ResponsiveContainer width="99%" height="100%">
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
           <XAxis dataKey="name" stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />
-          <YAxis stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value/1000}k FCFA`} />
-          <Tooltip
-             contentStyle={{ backgroundColor: '#1F2937', border: 'none', borderRadius: '8px', color: '#fff' }}
-             itemStyle={{ color: '#fff' }}
+          <YAxis
+            stroke="#9CA3AF"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => `${value / 1000}k FCFA`}
           />
-          <Line type="monotone" dataKey="value" stroke="#3B82F6" strokeWidth={3} dot={{ r: 4, fill: '#3B82F6' }} activeDot={{ r: 6 }} />
+          <Tooltip
+            contentStyle={{ backgroundColor: '#1F2937', border: 'none', borderRadius: '8px', color: '#fff' }}
+            itemStyle={{ color: '#fff' }}
+          />
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke="#10B981"
+            strokeWidth={3}
+            dot={{ r: 4, fill: '#10B981' }}
+            activeDot={{ r: 6 }}
+          />
         </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+export function IncomeVsExpenseChart({ data }: any) {
+  return (
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 h-[400px] min-h-[400px]">
+      <h3 className="text-lg font-semibold mb-4 dark:text-white">Revenus vs Dépenses</h3>
+      <ResponsiveContainer width="99%" height="100%">
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
+          <XAxis dataKey="name" stroke="#9CA3AF" fontSize={12} tickLine={false} axisLine={false} />
+          <YAxis
+            stroke="#9CA3AF"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => `${value / 1000}k`}
+          />
+          <Tooltip
+            contentStyle={{ backgroundColor: '#1F2937', border: 'none', borderRadius: '8px', color: '#fff' }}
+            itemStyle={{ color: '#fff' }}
+          />
+          <Legend />
+          <Bar dataKey="income" name="Revenus" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="expense" name="Dépenses" fill="#EF4444" radius={[4, 4, 0, 0]} />
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );
