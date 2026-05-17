@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { DollarSign, Briefcase, TrendingUp, Wallet } from 'lucide-react';
 import { assetsApi, transactionsApi } from '@/lib/api';
 
 export default function PortfolioPage() {
   const t = useTranslations('Portfolio');
+  const locale = useLocale();
   const [incomeData, setIncomeData] = useState<any[]>([]);
   const [passiveTotal, setPassiveTotal] = useState(0);
   const [totalIncome, setTotalIncome] = useState(0);
@@ -65,14 +66,14 @@ export default function PortfolioPage() {
                             <DollarSign className="text-blue-500" />
                             <span className="text-gray-500 dark:text-gray-400 text-sm font-medium">{t('totalCashFlow')}</span>
                         </div>
-                        <div className="text-2xl font-bold dark:text-white">{totalIncome.toLocaleString()} FCFA</div>
+                        <div className="text-2xl font-bold dark:text-white">{totalIncome.toLocaleString(locale)} FCFA</div>
                     </div>
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
                         <div className="flex items-center gap-3 mb-2">
                             <TrendingUp className="text-green-500" />
                             <span className="text-gray-500 dark:text-gray-400 text-sm font-medium">{t('monthlyPassive')}</span>
                         </div>
-                        <div className="text-2xl font-bold dark:text-white">{passiveTotal.toLocaleString()} FCFA</div>
+                        <div className="text-2xl font-bold dark:text-white">{passiveTotal.toLocaleString(locale)} FCFA</div>
                     </div>
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
                         <div className="flex items-center gap-3 mb-2">
@@ -92,7 +93,7 @@ export default function PortfolioPage() {
                             {incomeData.length > 0 ? incomeData.map((item) => (
                                 <div key={item.name} className="flex justify-between items-center">
                                     <span className="text-gray-600 dark:text-gray-400">{t(item.name.toLowerCase())}</span>
-                                    <span className="font-bold dark:text-white">{item.value.toLocaleString()} FCFA</span>
+                                    <span className="font-bold dark:text-white">{item.value.toLocaleString(locale)} FCFA</span>
                                 </div>
                             )) : <p className="text-gray-500">No income streams yet.</p>}
                         </div>

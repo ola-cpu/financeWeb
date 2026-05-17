@@ -1,20 +1,21 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Wallet, TrendingUp, Shield, Target } from 'lucide-react';
-import {useTranslations} from 'next-intl';
+import {useTranslations, useLocale} from 'next-intl';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
 export function DashboardOverview({ data }: any) {
   const t = useTranslations('Dashboard');
+  const locale = useLocale();
   const { netWorth, monthlyChange, healthScore, assetAllocation } = data;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <Card title={t('netWorth')} value={`${netWorth.toLocaleString()} FCFA`} change={monthlyChange} icon={<Wallet className="text-blue-500" />} />
+      <Card title={t('netWorth')} value={`${netWorth.toLocaleString(locale)} FCFA`} change={monthlyChange} icon={<Wallet className="text-blue-500" />} />
       <Card title={t('healthScore')} value={`${healthScore}/100`} description={t('babylonianCompliance')} icon={<Shield className="text-green-500" />} />
       <Card title={t('savingsRate')} value="15%" description={t('savingsGoal')} icon={<Target className="text-yellow-500" />} />
-      <Card title={t('investments')} value="42,000 FCFA" change="+5.2%" icon={<TrendingUp className="text-purple-500" />} />
+      <Card title={t('investments')} value={`${(42000).toLocaleString(locale)} FCFA`} change="+5.2%" icon={<TrendingUp className="text-purple-500" />} />
     </div>
   );
 }

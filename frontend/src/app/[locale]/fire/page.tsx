@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Target, TrendingUp, Calendar, Landmark } from 'lucide-react';
 import { assetsApi } from '@/lib/api';
 
 export default function FIREPage() {
   const t = useTranslations('FIRE');
+  const locale = useLocale();
   const [fireData, setFireData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -49,13 +50,13 @@ export default function FIREPage() {
                     />
                     <MetricCard
                         title={t('capitalNecessary')}
-                        value={`${fireData.fireNumber.toLocaleString()} FCFA`}
+                        value={`${fireData.fireNumber.toLocaleString(locale)} FCFA`}
                         icon={<Landmark className="text-purple-500" />}
                         description="4% rule target"
                     />
                     <MetricCard
                         title={t('requiredPassiveIncome')}
-                        value={`${Math.round(fireData.requiredPassiveIncome).toLocaleString()} FCFA`}
+                        value={`${Math.round(fireData.requiredPassiveIncome).toLocaleString(locale)} FCFA`}
                         icon={<TrendingUp className="text-green-500" />}
                         description="Monthly target"
                     />
