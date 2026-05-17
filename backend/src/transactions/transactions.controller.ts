@@ -11,6 +11,11 @@ export class TransactionsController {
     return this.transactionsService.create(transactionData);
   }
 
+  @Get('user/:userId/categorization')
+  getCategorization(@Param('userId') userId: string) {
+    return this.transactionsService.getExpenseCategorization(+userId);
+  }
+
   @Get('user/:userId')
   findAll(@Param('userId') userId: string) {
     return this.transactionsService.findAllByUserId(+userId);
@@ -29,10 +34,5 @@ export class TransactionsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.transactionsService.remove(+id);
-  }
-
-  @Get('user/:userId/categorization')
-  getCategorization(@Param('userId') userId: string) {
-    return this.transactionsService.getExpenseCategorization(+userId);
   }
 }
