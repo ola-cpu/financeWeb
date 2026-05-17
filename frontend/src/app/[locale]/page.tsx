@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { DashboardOverview, WealthProgressionChart, AssetAllocationChart } from '@/components/dashboard/Overview';
+import {
+  DashboardOverview,
+  WealthProgressionChart,
+  AssetAllocationChart,
+  IncomeVsExpenseChart,
+} from '@/components/dashboard/Overview';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { LevelProgress } from '@/components/rewards/LevelProgress';
 import { useTranslations } from 'next-intl';
@@ -17,11 +22,20 @@ const mockProgression = [
 ];
 
 const mockAllocation = [
-  { name: 'Stocks', value: 45 },
+  { name: 'Actions', value: 45 },
   { name: 'Cash', value: 15 },
   { name: 'Crypto', value: 10 },
-  { name: 'Real Estate', value: 25 },
-  { name: 'Gold', value: 5 },
+  { name: 'Immobilier', value: 25 },
+  { name: 'Or', value: 5 },
+];
+
+const mockIncomeVsExpense = [
+  { name: 'Jan', income: 5000, expense: 3000 },
+  { name: 'Feb', income: 5200, expense: 3100 },
+  { name: 'Mar', income: 4800, expense: 3500 },
+  { name: 'Apr', income: 6000, expense: 3200 },
+  { name: 'May', income: 5500, expense: 3300 },
+  { name: 'Jun', income: 7000, expense: 3400 },
 ];
 
 export default function DashboardPage() {
@@ -71,9 +85,34 @@ export default function DashboardPage() {
 
         <DashboardOverview data={data} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <IncomeVsExpenseChart data={mockIncomeVsExpense} />
           <WealthProgressionChart data={mockProgression} />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <AssetAllocationChart data={mockAllocation} />
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+            <h3 className="text-xl font-bold mb-6 dark:text-white">Les 7 Règles de Babylone</h3>
+            <div className="space-y-4">
+              {[
+                "Commencez à remplir votre bourse (Épargnez 10%)",
+                "Contrôlez vos dépenses",
+                "Faites fructifier votre or",
+                "Protégez votre trésor contre la perte",
+                "Faites de votre demeure un investissement profitable",
+                "Assurez un revenu pour le futur",
+                "Augmentez votre capacité à gagner"
+              ].map((rule, i) => (
+                <div key={i} className="flex gap-4 items-start">
+                  <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 font-bold text-sm">
+                    {i+1}
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{rule}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </main>
     </div>

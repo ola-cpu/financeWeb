@@ -79,6 +79,44 @@ export class AiService {
     return warnings.length > 0 ? warnings.join(' ') : 'Your gold flows wisely.';
   }
 
+  async analyzeExpenses(transactions: any[]) {
+    const expenses = transactions.filter(
+      (t) =>
+        t.type === 'expense' ||
+        ['nourriture', 'transport', 'logement', 'loisirs', 'sante', 'education'].includes(t.type),
+    );
+
+    const nonEssential = expenses.filter((t) => ['loisirs', 'Entertainment', 'Shopping'].includes(t.category || t.type));
+    const totalNonEssential = nonEssential.reduce((sum, t) => sum + t.amount, 0);
+
+    const analysis = [];
+    if (totalNonEssential > 0) {
+      analysis.push(
+        `Dépenses non essentielles identifiées : ${totalNonEssential} FCFA. "Contrôlez vos dépenses afin d'avoir de l'argent pour payer vos nécessités, vos loisirs et satisfaire vos désirs dignes sans dépenser plus que les neuf dixièmes de vos gains."`,
+      );
+    }
+
+    const fixed = transactions.filter((t) => t.isFixed);
+    if (fixed.length > 0) {
+      analysis.push(`${fixed.length} dépenses fixes détectées. Assurez-vous qu'elles ne dépassent pas 70% de vos revenus.`);
+    }
+
+    return analysis.length > 0 ? analysis.join(' ') : 'Analyse des dépenses terminée : aucun problème majeur détecté.';
+  }
+
+  async getBudgetAlerts(budgetStatus: any[]) {
+    const alerts = budgetStatus
+      .filter((b) => b.percentage > 90)
+      .map((b) => {
+        if (b.percentage >= 100) {
+          return `Alerte : Budget ${b.category} dépassé (${b.percentage.toFixed(1)}%) !`;
+        }
+        return `Attention : Budget ${b.category} presque atteint (${b.percentage.toFixed(1)}%).`;
+      });
+
+    return alerts;
+  }
+
   async getPsychologicalAdvice(userData: any) {
     if (!this.openai) {
       return this.getMockPsychologicalAdvice();
