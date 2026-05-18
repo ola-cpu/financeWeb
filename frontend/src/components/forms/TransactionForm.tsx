@@ -1,8 +1,16 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export function TransactionForm({ initialData, onSubmit, onCancel, loading, type = 'expense' }: any) {
+interface TransactionFormProps {
+  initialData?: any;
+  onSubmit: (data: any) => void;
+  onCancel: () => void;
+  loading: boolean;
+  type?: 'expense' | 'income';
+}
+
+export function TransactionForm({ initialData, onSubmit, onCancel, loading, type = 'expense' }: TransactionFormProps) {
   const [formData, setFormData] = useState(initialData || {
     description: '',
     amount: '',
@@ -10,8 +18,18 @@ export function TransactionForm({ initialData, onSubmit, onCancel, loading, type
     type: type,
     isRecurring: false,
     isFixed: false,
-    date: new Date().toISOString().split('T')[0]
+    date: ''
   });
+
+  useEffect(() => {
+    if (!initialData) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setFormData(prev => ({
+        ...prev,
+        date: new Date().toISOString().split('T')[0]
+      }));
+    }
+  }, [initialData]);
 
   const categories = type === 'expense'
     ? ['NOURRITURE', 'TRANSPORT', 'LOGEMENT', 'LOISIRS', 'SANTE', 'EDUCATION', 'AUTRE']
