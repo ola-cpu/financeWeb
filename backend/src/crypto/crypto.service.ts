@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CryptoAsset } from './entities/crypto-asset.entity';
@@ -18,7 +18,7 @@ export class CryptoService {
       const userId = typeof cryptoData.user === 'number' ? cryptoData.user : cryptoData.user.id;
       const user = await this.userRepository.findOne({ where: { id: userId } });
       if (!user) {
-        throw new NotFoundException(`User with ID ${userId} not found`);
+        throw new BadRequestException(`User with ID ${userId} not found`);
       }
     }
     const crypto = this.cryptoRepository.create(cryptoData);
@@ -38,7 +38,7 @@ export class CryptoService {
       const userId = typeof cryptoData.user === 'number' ? cryptoData.user : cryptoData.user.id;
       const user = await this.userRepository.findOne({ where: { id: userId } });
       if (!user) {
-        throw new NotFoundException(`User with ID ${userId} not found`);
+        throw new BadRequestException(`User with ID ${userId} not found`);
       }
     }
     await this.cryptoRepository.update(id, cryptoData);

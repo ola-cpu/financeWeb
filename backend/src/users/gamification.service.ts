@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { Badge } from './entities/badge.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class GamificationService implements OnModuleInit {
@@ -17,6 +18,7 @@ export class GamificationService implements OnModuleInit {
 
   async onModuleInit() {
     await this.seedBadges();
+    await this.seedDefaultUser();
   }
 
   private async seedBadges() {
@@ -32,6 +34,26 @@ export class GamificationService implements OnModuleInit {
       if (!exists) {
         await this.badgesRepository.save(this.badgesRepository.create(badgeData));
       }
+    }
+  }
+
+  private async seedDefaultUser() {
+    const defaultUser = await this.usersRepository.findOne({ where: { id: 1 } });
+    if (!defaultUser) {
+      this.logger.log('Seeding default user...');
+      const hashedPassword = await bcrypt.hash('password', 10);
+      const user = this.usersRepository.create({
+        id: 1,
+        email: 'user@example.com',
+        password: hashedPassword,
+        name: 'Utilisateur Babylon',
+        monthlyIncome: 500000,
+        savingsRate: 15,
+        level: 1,
+        xp: 0,
+      });
+      await this.usersRepository.save(user);
+      this.logger.log('Default user seeded successfully');
     }
   }
 

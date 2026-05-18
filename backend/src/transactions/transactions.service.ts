@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Transaction, TransactionType } from './entities/transaction.entity';
@@ -20,7 +20,7 @@ export class TransactionsService {
       const userId = typeof transactionData.user === 'number' ? transactionData.user : transactionData.user.id;
       const user = await this.userRepository.findOne({ where: { id: userId } });
       if (!user) {
-        throw new NotFoundException(`User with ID ${userId} not found`);
+        throw new BadRequestException(`User with ID ${userId} not found`);
       }
     }
     const transaction = await this.transactionsRepository.save(this.transactionsRepository.create(transactionData));
@@ -58,7 +58,7 @@ export class TransactionsService {
       const userId = typeof transactionData.user === 'number' ? transactionData.user : transactionData.user.id;
       const user = await this.userRepository.findOne({ where: { id: userId } });
       if (!user) {
-        throw new NotFoundException(`User with ID ${userId} not found`);
+        throw new BadRequestException(`User with ID ${userId} not found`);
       }
     }
     await this.transactionsRepository.update(id, transactionData);

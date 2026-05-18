@@ -35,6 +35,7 @@ export const transactionsApi = {
   create: (data: any) => api.post('/transactions', data),
   update: (id: number, data: any) => api.put(`/transactions/${id}`, data),
   delete: (id: number) => api.delete(`/transactions/${id}`),
+  getCategorization: (userId: number) => api.get(`/transactions/user/${userId}/categorization`),
 };
 
 export const budgetApi = {
@@ -52,6 +53,8 @@ export const savingsApi = {
   update: (id: number, data: any) => api.put(`/savings/${id}`, data),
   delete: (id: number) => api.delete(`/savings/${id}`),
   deposit: (id: number, amount: number) => api.post(`/savings/${id}/deposit`, { amount }),
+  withdraw: (id: number, amount: number) => api.post(`/savings/${id}/withdraw`, { amount }),
+  calculateInterests: (id: number) => api.post(`/savings/${id}/calculate-interests`),
 };
 
 export const tontinesApi = {
@@ -61,6 +64,7 @@ export const tontinesApi = {
   delete: (id: number) => api.delete(`/tontines/${id}`),
   addMember: (id: number, data: any) => api.post(`/tontines/${id}/members`, data),
   markPayoutDone: (memberId: number) => api.post(`/tontines/members/${memberId}/payout`),
+  getNextBeneficiary: (id: number) => api.get(`/tontines/${id}/next-beneficiary`),
 };
 
 export const cryptoApi = {
