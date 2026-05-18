@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Asset } from './entities/asset.entity';
@@ -18,7 +18,7 @@ export class AssetsService {
       const userId = typeof assetData.user === 'number' ? assetData.user : assetData.user.id;
       const user = await this.userRepository.findOne({ where: { id: userId } });
       if (!user) {
-        throw new NotFoundException(`User with ID ${userId} not found`);
+        throw new BadRequestException(`User with ID ${userId} not found`);
       }
     }
     const asset = this.assetsRepository.create(assetData);
@@ -46,7 +46,7 @@ export class AssetsService {
       const userId = typeof assetData.user === 'number' ? assetData.user : assetData.user.id;
       const user = await this.userRepository.findOne({ where: { id: userId } });
       if (!user) {
-        throw new NotFoundException(`User with ID ${userId} not found`);
+        throw new BadRequestException(`User with ID ${userId} not found`);
       }
     }
     await this.assetsRepository.update(id, assetData);

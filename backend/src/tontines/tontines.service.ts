@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tontine } from './entities/tontine.entity';
@@ -21,7 +21,7 @@ export class TontinesService {
       const userId = typeof tontineData.creator === 'number' ? tontineData.creator : tontineData.creator.id;
       const user = await this.userRepository.findOne({ where: { id: userId } });
       if (!user) {
-        throw new NotFoundException(`User with ID ${userId} not found`);
+        throw new BadRequestException(`User with ID ${userId} not found`);
       }
     }
     const tontine = this.tontineRepository.create(tontineData);
@@ -79,7 +79,7 @@ export class TontinesService {
       const userId = typeof tontineData.creator === 'number' ? tontineData.creator : tontineData.creator.id;
       const user = await this.userRepository.findOne({ where: { id: userId } });
       if (!user) {
-        throw new NotFoundException(`User with ID ${userId} not found`);
+        throw new BadRequestException(`User with ID ${userId} not found`);
       }
     }
     await this.tontineRepository.update(id, tontineData);
