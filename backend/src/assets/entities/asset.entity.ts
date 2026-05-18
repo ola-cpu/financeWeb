@@ -2,18 +2,19 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, Up
 import { User } from '../../users/entities/user.entity';
 
 export enum AssetType {
-  CASH = 'cash',
-  SAVINGS = 'savings',
-  STOCKS = 'stocks',
-  ETF = 'etf',
-  CRYPTO = 'crypto',
-  REAL_ESTATE = 'real_estate',
-  BUSINESS = 'business',
-  PRECIOUS_METALS = 'precious_metals',
-  INVESTMENT_FUNDS = 'investment_funds',
-  BONDS = 'bonds',
-  MOBILE_MONEY = 'mobile_money',
-  TONTINE = 'tontine',
+  CASH = 'CASH',
+  SAVINGS = 'SAVINGS',
+  STOCKS = 'STOCKS',
+  ETF = 'ETF',
+  CRYPTO = 'CRYPTO',
+  REAL_ESTATE = 'REAL_ESTATE',
+  BUSINESS = 'BUSINESS',
+  PRECIOUS_METALS = 'PRECIOUS_METALS',
+  INVESTMENT_FUNDS = 'INVESTMENT_FUNDS',
+  BONDS = 'BONDS',
+  GOLD = 'GOLD',
+  MOBILE_MONEY = 'MOBILE_MONEY',
+  TONTINE = 'TONTINE',
 }
 
 @Entity('assets')
