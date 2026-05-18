@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { Budget } from './entities/budget.entity';
 import { Transaction, TransactionType } from '../transactions/entities/transaction.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class BudgetService {
@@ -11,9 +12,18 @@ export class BudgetService {
     private budgetRepository: Repository<Budget>,
     @InjectRepository(Transaction)
     private transactionRepository: Repository<Transaction>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async create(budgetData: Partial<Budget>): Promise<Budget> {
+    if (budgetData.user) {
+      const userId = typeof budgetData.user === 'number' ? budgetData.user : budgetData.user.id;
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+    }
     const budget = this.budgetRepository.create(budgetData);
     return this.budgetRepository.save(budget);
   }
@@ -22,12 +32,31 @@ export class BudgetService {
     return this.budgetRepository.find({ where: { user: { id: userId } } });
   }
 
-  async update(id: number, budgetData: Partial<Budget>): Promise<Budget | null> {
+  async update(id: number, budgetData: Partial<Budget>): Promise<Budget> {
+    const budget = await this.budgetRepository.findOne({ where: { id } });
+    if (!budget) {
+      throw new NotFoundException(`Budget with ID ${id} not found`);
+    }
+    if (budgetData.user) {
+      const userId = typeof budgetData.user === 'number' ? budgetData.user : budgetData.user.id;
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+    }
     await this.budgetRepository.update(id, budgetData);
-    return this.budgetRepository.findOne({ where: { id } });
+    const updated = await this.budgetRepository.findOne({ where: { id } });
+    if (!updated) {
+      throw new NotFoundException(`Budget with ID ${id} not found after update`);
+    }
+    return updated;
   }
 
   async remove(id: number): Promise<void> {
+    const budget = await this.budgetRepository.findOne({ where: { id } });
+    if (!budget) {
+      throw new NotFoundException(`Budget with ID ${id} not found`);
+    }
     await this.budgetRepository.delete(id);
   }
 
