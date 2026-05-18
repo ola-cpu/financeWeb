@@ -37,7 +37,6 @@ export class UsersService {
 
   async calculateBabylonianHealth(userId: number) {
     const user = await this.findOne(userId);
-    if (!user) throw new Error('User not found');
 
     const now = new Date();
     const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -50,7 +49,7 @@ export class UsersService {
       },
     });
 
-    const monthlyIncome = user.monthlyIncome || transactions
+    const monthlyIncome = user?.monthlyIncome || transactions
       .filter(t => t.type === TransactionType.INCOME)
       .reduce((sum, t) => sum + t.amount, 0);
 
@@ -89,7 +88,6 @@ export class UsersService {
 
   async getDashboardSummary(userId: number) {
     const user = await this.findOne(userId);
-    if (!user) throw new Error('User not found');
 
     const assets = await this.assetsRepository.find({ where: { user: { id: userId } } });
     const netWorth = assets.reduce((sum, a) => sum + a.value, 0);
