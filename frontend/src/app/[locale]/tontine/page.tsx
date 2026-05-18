@@ -1,31 +1,96 @@
 "use client";
+import { AUTH_USER_ID } from "@/lib/auth";
 
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { useTranslations, useLocale } from 'next-intl';
-import { Plus, Users, Calendar, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
-import { axiosInstance } from '@/lib/api';
+import { Plus, Users, Calendar, ArrowRight, CheckCircle2, AlertCircle, Trash2, Edit2 } from 'lucide-react';
+import { tontinesApi } from '@/lib/api';
+import { Modal } from '@/components/ui/Modal';
+import { TontineForm } from '@/components/forms/TontineForm';
+import { useNotification } from '@/components/layout/NotificationProvider';
 
 export default function TontinePage() {
   const t = useTranslations('Tontine');
   const locale = useLocale();
+  const { notify } = useNotification();
   const [tontines, setTontines] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTontine, setEditingTontine] = useState<any>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const fetchTontines = async () => {
+    try {
+      const userId = AUTH_USER_ID;
+      const response = await tontinesApi.getAll(userId);
+      setTontines(response.data);
+    } catch (error) {
+      console.error('Failed to fetch tontines', error);
+      notify('Erreur lors du chargement des tontines', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchTontines() {
-      try {
-        const userId = 1;
-        const response = await axiosInstance.get(`/tontines?userId=${userId}`);
-        setTontines(response.data);
-      } catch (error) {
-        console.error('Failed to fetch tontines', error);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchTontines();
   }, []);
+
+  const handleCreateOrUpdate = async (data: any) => {
+    setSubmitting(true);
+    try {
+      const userId = AUTH_USER_ID;
+      if (editingTontine) {
+        await tontinesApi.update(editingTontine.id, data);
+        notify('Tontine mise à jour', 'success');
+      } else {
+        await tontinesApi.create({ ...data, creator: { id: userId } });
+        notify('Tontine créée ! Invite tes amis.', 'success');
+      }
+      setIsModalOpen(false);
+      setEditingTontine(null);
+      fetchTontines();
+    } catch (error) {
+      notify('Erreur lors de l\'enregistrement', 'error');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('Supprimer cette tontine ?')) return;
+    try {
+      await tontinesApi.delete(id);
+      notify('Tontine supprimée', 'success');
+      fetchTontines();
+    } catch (error) {
+      notify('Erreur lors de la suppression', 'error');
+    }
+  };
+
+  const handleAddMember = async (tontineId: number) => {
+    const name = prompt('Nom du nouveau membre :');
+    if (!name) return;
+    try {
+      await tontinesApi.addMember(tontineId, { name });
+      notify('Membre ajouté !', 'success');
+      fetchTontines();
+    } catch (error) {
+      notify('Erreur lors de l\'ajout', 'error');
+    }
+  };
+
+  const handlePayout = async (memberId: number) => {
+    if (!confirm('Confirmer le paiement pour ce membre ?')) return;
+    try {
+      await tontinesApi.markPayoutDone(memberId);
+      notify('Paiement validé !', 'success');
+      fetchTontines();
+    } catch (error) {
+      notify('Erreur lors de la validation', 'error');
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -36,7 +101,10 @@ export default function TontinePage() {
             <h1 className="text-3xl font-bold dark:text-white text-gray-900">{t('title')}</h1>
             <p className="text-gray-500 dark:text-gray-400">{t('description')}</p>
           </div>
-          <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-colors">
+          <button
+            onClick={() => { setEditingTontine(null); setIsModalOpen(true); }}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-colors font-bold"
+          >
             <Plus size={20} />
             {t('create')}
           </button>
@@ -50,7 +118,7 @@ export default function TontinePage() {
               <Users className="mx-auto text-gray-300 mb-4" size={48} />
               <h3 className="text-xl font-bold dark:text-white mb-2">{t('noTontine')}</h3>
               <p className="text-gray-500 mb-6">{t('noTontineDesc')}</p>
-              <button className="bg-purple-600 text-white px-6 py-3 rounded-xl font-bold">{t('start')}</button>
+              <button onClick={() => setIsModalOpen(true)} className="bg-purple-600 text-white px-6 py-3 rounded-xl font-bold">{t('start')}</button>
             </div>
           ) : (
             tontines.map((tontine) => (
@@ -66,26 +134,35 @@ export default function TontinePage() {
                                     <span>{tontine.frequency} • {tontine.contributionAmount.toLocaleString(locale)} FCFA / membre</span>
                                 </div>
                             </div>
-                            <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded-full text-xs font-bold uppercase">
-                                Actif
-                            </span>
+                            <div className="flex gap-2">
+                                <button onClick={() => { setEditingTontine(tontine); setIsModalOpen(true); }} className="p-2 text-gray-400 hover:text-purple-600"><Edit2 size={16} /></button>
+                                <button onClick={() => handleDelete(tontine.id)} className="p-2 text-gray-400 hover:text-red-600"><Trash2 size={16} /></button>
+                            </div>
                         </div>
 
                 <div className="space-y-4 mb-8">
-                  <h4 className="font-bold dark:text-white flex items-center gap-2">
-                    <Users size={18} />
-                    {t('members')} ({tontine.members?.length || 0})
-                  </h4>
+                  <div className="flex justify-between items-center">
+                    <h4 className="font-bold dark:text-white flex items-center gap-2">
+                      <Users size={18} />
+                      {t('members')} ({tontine.members?.length || 0})
+                    </h4>
+                    <button onClick={() => handleAddMember(tontine.id)} className="text-xs font-bold text-purple-600 hover:underline">+ Ajouter</button>
+                  </div>
                             <div className="grid grid-cols-2 gap-3">
                                 {tontine.members?.map((member: any) => (
-                                    <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                                    <button
+                                      key={member.id}
+                                      onClick={() => !member.hasReceivedPayout && handlePayout(member.id)}
+                                      disabled={member.hasReceivedPayout}
+                                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                    >
                                         <span className="text-sm dark:text-gray-200">{member.name}</span>
                                         {member.hasReceivedPayout ? (
                                             <CheckCircle2 size={16} className="text-green-500" />
                                         ) : (
                                             <span className="w-4 h-4 rounded-full border-2 border-gray-300"></span>
                                         )}
-                                    </div>
+                                    </button>
                                 ))}
                             </div>
                         </div>
@@ -111,15 +188,19 @@ export default function TontinePage() {
                 </div>
                             </div>
                         </div>
-
-                <button className="w-full py-3 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
-                  {t('viewDetails')}
-                  <ArrowRight size={18} />
-                </button>
                     </div>
                 ))
             )}
         </div>
+
+        <Modal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setEditingTontine(null); }} title={editingTontine ? "Modifier Tontine" : "Créer une Tontine"}>
+          <TontineForm
+            initialData={editingTontine}
+            onSubmit={handleCreateOrUpdate}
+            onCancel={() => { setIsModalOpen(false); setEditingTontine(null); }}
+            loading={submitting}
+          />
+        </Modal>
       </main>
     </div>
   );

@@ -23,12 +23,13 @@ export function DashboardOverview({ data }: any) {
   const t = useTranslations('Dashboard');
   const locale = useLocale();
   const {
-    netWorth = 54200,
-    monthlyChange = '+12.5%',
-    healthScore = 85,
-    totalSavings = 12500,
-    budgetRemaining = 45000,
-    passiveIncome = 5000,
+    netWorth = 0,
+    monthlyChange = '+0%',
+    healthScore = 0,
+    totalSavings = 0,
+    budgetRemaining = 0,
+    passiveIncome = 0,
+    savingsRate = 0,
   } = data;
 
   return (
@@ -62,7 +63,7 @@ export function DashboardOverview({ data }: any) {
       />
       <Card
         title={t('savingsRate')}
-        value="15%"
+        value={`${savingsRate.toFixed(1)}%`}
         description={t('savingsGoal')}
         icon={<Target className="text-yellow-500" />}
       />

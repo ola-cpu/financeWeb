@@ -1,4 +1,5 @@
 "use client";
+import { AUTH_USER_ID } from "@/lib/auth";
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -10,60 +11,34 @@ import {
 import { Sidebar } from '@/components/layout/Sidebar';
 import { LevelProgress } from '@/components/rewards/LevelProgress';
 import { useTranslations } from 'next-intl';
-import { gamificationApi } from '@/lib/api';
-
-const mockProgression = [
-  { name: 'Jan', value: 10000 },
-  { name: 'Feb', value: 12500 },
-  { name: 'Mar', value: 15000 },
-  { name: 'Apr', value: 14000 },
-  { name: 'May', value: 18000 },
-  { name: 'Jun', value: 22000 },
-];
-
-const mockAllocation = [
-  { name: 'Actions', value: 45 },
-  { name: 'Cash', value: 15 },
-  { name: 'Crypto', value: 10 },
-  { name: 'Immobilier', value: 25 },
-  { name: 'Or', value: 5 },
-];
-
-const mockIncomeVsExpense = [
-  { name: 'Jan', income: 5000, expense: 3000 },
-  { name: 'Feb', income: 5200, expense: 3100 },
-  { name: 'Mar', income: 4800, expense: 3500 },
-  { name: 'Apr', income: 6000, expense: 3200 },
-  { name: 'May', income: 5500, expense: 3300 },
-  { name: 'Jun', income: 7000, expense: 3400 },
-];
+import { gamificationApi, usersApi } from '@/lib/api';
+import { useNotification } from '@/components/layout/NotificationProvider';
 
 export default function DashboardPage() {
   const t = useTranslations('Dashboard');
+  const { notify } = useNotification();
   const [progress, setProgress] = useState<any>(null);
-  const [data, setData] = useState({
-    netWorth: 54200,
-    monthlyChange: '+12.5%',
-    healthScore: 85,
-  });
+  const [summary, setSummary] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchProgress() {
+    async function fetchData() {
       try {
-        const response = await gamificationApi.getProgress();
-        setProgress(response.data);
+        const userId = AUTH_USER_ID;
+        const [progressRes, summaryRes] = await Promise.all([
+          gamificationApi.getProgress(),
+          usersApi.getDashboardSummary(userId)
+        ]);
+        setProgress(progressRes.data);
+        setSummary(summaryRes.data);
       } catch (error) {
-        console.error('Failed to fetch gamification progress', error);
-        // Fallback for demo if API fails
-        setProgress({
-          level: 1,
-          xp: 0,
-          xpToNextLevel: 100,
-          badges: []
-        });
+        console.error('Failed to fetch dashboard data', error);
+        notify('Erreur lors de la récupération des données du tableau de bord', 'error');
+      } finally {
+        setLoading(false);
       }
     }
-    fetchProgress();
+    fetchData();
   }, []);
 
   return (
@@ -75,45 +50,63 @@ export default function DashboardPage() {
           <p className="text-gray-500 dark:text-gray-400">{t('welcome', {name: 'Arkad'})}</p>
         </header>
 
-        {progress && (
-          <LevelProgress
-            level={progress.level}
-            xp={progress.xp}
-            xpToNextLevel={progress.xpToNextLevel}
-          />
-        )}
-
-        <DashboardOverview data={data} />
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <IncomeVsExpenseChart data={mockIncomeVsExpense} />
-          <WealthProgressionChart data={mockProgression} />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <AssetAllocationChart data={mockAllocation} />
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
-            <h3 className="text-xl font-bold mb-6 dark:text-white">Les 7 Règles de Babylone</h3>
-            <div className="space-y-4">
-              {[
-                "Commencez à remplir votre bourse (Épargnez 10%)",
-                "Contrôlez vos dépenses",
-                "Faites fructifier votre or",
-                "Protégez votre trésor contre la perte",
-                "Faites de votre demeure un investissement profitable",
-                "Assurez un revenu pour le futur",
-                "Augmentez votre capacité à gagner"
-              ].map((rule, i) => (
-                <div key={i} className="flex gap-4 items-start">
-                  <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 font-bold text-sm">
-                    {i+1}
-                  </div>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm font-medium">{rule}</p>
-                </div>
-              ))}
-            </div>
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
-        </div>
+        ) : (
+          <>
+            {progress && (
+              <LevelProgress
+                level={progress.level}
+                xp={progress.xp}
+                xpToNextLevel={progress.xpToNextLevel}
+              />
+            )}
+
+            {summary && (
+              <>
+                <DashboardOverview data={{
+                  netWorth: summary.netWorth,
+                  monthlyChange: summary.monthlyChange,
+                  healthScore: summary.healthScore,
+                  totalSavings: summary.totalSavings,
+                  budgetRemaining: summary.budgetRemaining,
+                  passiveIncome: summary.passiveIncome,
+                  savingsRate: summary.savingsRate,
+                }} />
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                  <IncomeVsExpenseChart data={summary.charts.incomeVsExpense} />
+                  <WealthProgressionChart data={summary.charts.wealthProgression} />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <AssetAllocationChart data={summary.charts.assetAllocation} />
+                  <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 className="text-xl font-bold mb-6 dark:text-white">Les 7 Règles de Babylone</h3>
+                    <div className="space-y-4">
+                      {summary.rulesStatus?.map((rule: any, i: number) => (
+                        <div key={rule.id} className="flex gap-4 items-start">
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 font-bold text-sm ${
+                            rule.completed
+                              ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                              : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                          }`}>
+                            {rule.completed ? '✓' : i + 1}
+                          </div>
+                          <p className={`text-sm font-medium ${rule.completed ? 'text-green-600 dark:text-green-400' : 'text-gray-700 dark:text-gray-300'}`}>
+                            {rule.name}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        )}
       </main>
     </div>
   );

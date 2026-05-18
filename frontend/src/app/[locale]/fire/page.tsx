@@ -1,4 +1,5 @@
 "use client";
+import { AUTH_USER_ID } from "@/lib/auth";
 
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -15,7 +16,7 @@ export default function FIREPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const userId = 1;
+        const userId = AUTH_USER_ID;
         const annualExpenses = 50000; // Mock annual expenses
         const response = await assetsApi.getFIREStatus(userId, annualExpenses);
         setFireData(response.data);

@@ -14,4 +14,9 @@ export class UsersController {
   getBabylonianHealth(@Param('id') id: string) {
     return this.usersService.calculateBabylonianHealth(+id);
   }
+
+  @Get(':id/dashboard-summary')
+  getDashboardSummary(@Param('id') id: string) {
+    return this.usersService.getDashboardSummary(+id);
+  }
 }

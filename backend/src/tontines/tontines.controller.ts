@@ -32,6 +32,11 @@ export class TontinesController {
     return this.tontinesService.markPayoutDone(+memberId);
   }
 
+  @Put(':id')
+  update(@Param('id') id: string, @Body() tontineData: Partial<Tontine>) {
+    return this.tontinesService.update(+id, tontineData);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.tontinesService.remove(+id);
