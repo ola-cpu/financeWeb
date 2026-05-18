@@ -1,14 +1,40 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocale } from 'next-intl';
 
-export function BudgetForm({ initialData, onSubmit, onCancel, loading }: any) {
+interface BudgetFormProps {
+  initialData?: {
+    category: string;
+    amount: number | string;
+    month: number;
+    year: number;
+  };
+  onSubmit: (data: any) => void;
+  onCancel: () => void;
+  loading: boolean;
+}
+
+export function BudgetForm({ initialData, onSubmit, onCancel, loading }: BudgetFormProps) {
+  const locale = useLocale();
   const [formData, setFormData] = useState(initialData || {
     category: '',
     amount: '',
-    month: new Date().getMonth() + 1,
-    year: new Date().getFullYear(),
+    month: 1,
+    year: 2024,
   });
+
+  useEffect(() => {
+    if (!initialData) {
+      const now = new Date();
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setFormData(prev => ({
+        ...prev,
+        month: now.getMonth() + 1,
+        year: now.getFullYear()
+      }));
+    }
+  }, [initialData]);
 
   const categories = ['NOURRITURE', 'TRANSPORT', 'LOGEMENT', 'LOISIRS', 'SANTE', 'EDUCATION', 'AUTRE'];
 
@@ -53,7 +79,7 @@ export function BudgetForm({ initialData, onSubmit, onCancel, loading }: any) {
             onChange={(e) => setFormData({ ...formData, month: parseInt(e.target.value) })}
           >
             {Array.from({ length: 12 }, (_, i) => (
-              <option key={i + 1} value={i + 1}>{new Date(2000, i).toLocaleString('default', { month: 'long' })}</option>
+              <option key={i + 1} value={i + 1}>{new Date(2000, i).toLocaleString(locale, { month: 'long' })}</option>
             ))}
           </select>
         </div>

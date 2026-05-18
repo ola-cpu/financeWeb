@@ -2,4 +2,54 @@
 > frontend@0.1.0 dev
 > next dev
 
-sh: 1: next: not found
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+✓ Ready in 480ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+○ Compiling /[locale]/budget ...
+ GET /fr/budget 200 in 8.1s (next.js: 6.7s, proxy.ts: 141ms, application-code: 1188ms)
+[browser] Failed to fetch budgets AxiosError: Network Error
+    at async fetchBudgets (src/app/[locale]/budget/page.tsx:29:35)
+  27 |       const userId = AUTH_USER_ID;
+  28 |       const now = new Date();
+> 29 |       const [statusRes, allRes] = await Promise.all([
+     |                                   ^
+  30 |         budgetApi.getStatus(userId, now.getMonth() + 1, now.getFullYear()),
+  31 |         budgetApi.getAll(userId)
+  32 |       ]); (src/app/[locale]/budget/page.tsx:36:15)
+[browser] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[browser] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+ GET /fr/budget 200 in 159ms (next.js: 47ms, proxy.ts: 10ms, application-code: 102ms)
+[browser] Failed to fetch budgets AxiosError: Network Error
+    at async fetchBudgets (src/app/[locale]/budget/page.tsx:29:35)
+  27 |       const userId = AUTH_USER_ID;
+  28 |       const now = new Date();
+> 29 |       const [statusRes, allRes] = await Promise.all([
+     |                                   ^
+  30 |         budgetApi.getStatus(userId, now.getMonth() + 1, now.getFullYear()),
+  31 |         budgetApi.getAll(userId)
+  32 |       ]); (src/app/[locale]/budget/page.tsx:36:15)
+[browser] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[browser] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[browser] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[browser] The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
