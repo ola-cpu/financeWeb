@@ -1,16 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Asset } from './entities/asset.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AssetsService {
   constructor(
     @InjectRepository(Asset)
     private assetsRepository: Repository<Asset>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async create(assetData: Partial<Asset>): Promise<Asset> {
+    if (assetData.user) {
+      const userId = typeof assetData.user === 'number' ? assetData.user : assetData.user.id;
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+    }
     const asset = this.assetsRepository.create(assetData);
     return this.assetsRepository.save(asset);
   }
@@ -19,16 +29,35 @@ export class AssetsService {
     return this.assetsRepository.find({ where: { user: { id: userId } } });
   }
 
-  async findOne(id: number): Promise<Asset | null> {
-    return this.assetsRepository.findOne({ where: { id } });
+  async findOne(id: number): Promise<Asset> {
+    const asset = await this.assetsRepository.findOne({ where: { id } });
+    if (!asset) {
+      throw new NotFoundException(`Asset with ID ${id} not found`);
+    }
+    return asset;
   }
 
-  async update(id: number, assetData: Partial<Asset>): Promise<Asset | null> {
+  async update(id: number, assetData: Partial<Asset>): Promise<Asset> {
+    const asset = await this.assetsRepository.findOne({ where: { id } });
+    if (!asset) {
+      throw new NotFoundException(`Asset with ID ${id} not found`);
+    }
+    if (assetData.user) {
+      const userId = typeof assetData.user === 'number' ? assetData.user : assetData.user.id;
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+    }
     await this.assetsRepository.update(id, assetData);
     return this.findOne(id);
   }
 
   async remove(id: number): Promise<void> {
+    const asset = await this.assetsRepository.findOne({ where: { id } });
+    if (!asset) {
+      throw new NotFoundException(`Asset with ID ${id} not found`);
+    }
     await this.assetsRepository.delete(id);
   }
 

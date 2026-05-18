@@ -3,6 +3,7 @@ import { TransactionsService } from './transactions.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Transaction } from './entities/transaction.entity';
 import { GamificationService } from '../users/gamification.service';
+import { User } from '../users/entities/user.entity';
 
 describe('TransactionsService', () => {
   let service: TransactionsService;
@@ -15,6 +16,12 @@ describe('TransactionsService', () => {
           provide: getRepositoryToken(Transaction),
           useValue: {
             find: jest.fn(),
+          },
+        },
+        {
+          provide: getRepositoryToken(User),
+          useValue: {
+            findOne: jest.fn(),
           },
         },
         {
