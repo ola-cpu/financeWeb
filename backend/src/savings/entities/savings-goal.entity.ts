@@ -2,10 +2,11 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, Up
 import { User } from '../../users/entities/user.entity';
 
 export enum SavingsGoalType {
-  VOITURE = 'voiture',
-  MAISON = 'maison',
-  URGENCE = 'urgence',
-  RETRAITE = 'retraite',
+  EMERGENCY_FUND = 'emergency_fund',
+  INVESTMENT = 'investment',
+  PURCHASE = 'purchase',
+  RETIREMENT = 'retirement',
+  OTHER = 'other',
 }
 
 @Entity('savings_goals')
@@ -29,6 +30,9 @@ export class SavingsGoal {
 
   @Column({ type: 'float', default: 0 })
   interestRate: number; // Annual percentage
+
+  @Column({ type: 'date', nullable: true })
+  deadline: Date;
 
   @ManyToOne(() => User)
   user: User;
