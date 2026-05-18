@@ -9,32 +9,44 @@ import { Budget } from '../budget/entities/budget.entity';
 
 describe('UsersService', () => {
   let service: UsersService;
+  let userRepository: any;
 
   beforeEach(async () => {
+    userRepository = {
+      findOne: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
         {
           provide: getRepositoryToken(User),
-          useValue: {
-            findOne: jest.fn(),
-          },
+          useValue: userRepository,
         },
         {
           provide: getRepositoryToken(Asset),
-          useValue: {},
+          useValue: {
+            find: jest.fn().mockResolvedValue([]),
+            count: jest.fn().mockResolvedValue(0),
+          },
         },
         {
           provide: getRepositoryToken(Transaction),
-          useValue: {},
+          useValue: {
+            find: jest.fn().mockResolvedValue([]),
+          },
         },
         {
           provide: getRepositoryToken(SavingsGoal),
-          useValue: {},
+          useValue: {
+            find: jest.fn().mockResolvedValue([]),
+          },
         },
         {
           provide: getRepositoryToken(Budget),
-          useValue: {},
+          useValue: {
+            find: jest.fn().mockResolvedValue([]),
+          },
         },
       ],
     }).compile();
@@ -44,5 +56,14 @@ describe('UsersService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('should return a dashboard summary even if user is not found', async () => {
+    userRepository.findOne.mockResolvedValue(null);
+
+    const result = await service.getDashboardSummary(1);
+    expect(result).toBeDefined();
+    expect(result.netWorth).toBe(0);
+    expect(result.healthScore).toBeDefined();
   });
 });
