@@ -50,6 +50,11 @@ export class TontinesService {
     return this.tontineMemberRepository.findOne({ where: { id: memberId } });
   }
 
+  async update(id: number, tontineData: Partial<Tontine>): Promise<Tontine | null> {
+    await this.tontineRepository.update(id, tontineData);
+    return this.tontineRepository.findOne({ where: { id }, relations: ['members'] });
+  }
+
   async remove(id: number): Promise<void> {
     await this.tontineRepository.delete(id);
   }

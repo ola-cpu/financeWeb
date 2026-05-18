@@ -1,36 +1,78 @@
 "use client";
+import { AUTH_USER_ID } from "@/lib/auth";
 
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { useTranslations, useLocale } from 'next-intl';
-import { Plus, Bitcoin, TrendingUp, TrendingDown, PieChart, ShieldCheck } from 'lucide-react';
-import { axiosInstance } from '@/lib/api';
+import { Plus, Bitcoin, TrendingUp, TrendingDown, PieChart, ShieldCheck, Trash2, Edit2 } from 'lucide-react';
+import { cryptoApi } from '@/lib/api';
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { Modal } from '@/components/ui/Modal';
+import { CryptoForm } from '@/components/forms/CryptoForm';
+import { useNotification } from '@/components/layout/NotificationProvider';
 
 export default function CryptoPage() {
   const t = useTranslations('Crypto');
   const locale = useLocale();
+  const { notify } = useNotification();
   const [portfolio, setPortfolio] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCrypto, setEditingCrypto] = useState<any>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const fetchCrypto = async () => {
+    try {
+      const userId = AUTH_USER_ID;
+      const response = await cryptoApi.getPortfolio(userId);
+      setPortfolio(response.data);
+    } catch (error) {
+      console.error('Failed to fetch crypto portfolio', error);
+      notify('Erreur lors du chargement du portfolio crypto', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchCrypto() {
-      try {
-        const userId = 1;
-        const response = await axiosInstance.get(`/crypto/portfolio?userId=${userId}`);
-        setPortfolio(response.data);
-      } catch (error) {
-        console.error('Failed to fetch crypto portfolio', error);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchCrypto();
   }, []);
 
+  const handleCreateOrUpdate = async (data: any) => {
+    setSubmitting(true);
+    try {
+      const userId = AUTH_USER_ID;
+      if (editingCrypto) {
+        await cryptoApi.update(editingCrypto.id, data);
+        notify('Actif mis à jour', 'success');
+      } else {
+        await cryptoApi.create({ ...data, user: { id: userId } });
+        notify('Actif crypto ajouté', 'success');
+      }
+      setIsModalOpen(false);
+      setEditingCrypto(null);
+      fetchCrypto();
+    } catch (error) {
+      notify('Erreur lors de l\'enregistrement', 'error');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('Supprimer cet actif crypto ?')) return;
+    try {
+      await cryptoApi.delete(id);
+      notify('Actif supprimé', 'success');
+      fetchCrypto();
+    } catch (error) {
+      notify('Erreur lors de la suppression', 'error');
+    }
+  };
+
   const totalValue = portfolio.reduce((sum, c) => sum + c.currentValue, 0);
   const totalProfitLoss = portfolio.reduce((sum, c) => sum + c.profitLoss, 0);
-  const totalProfitLossPercentage = totalValue > 0 ? (totalProfitLoss / (totalValue - totalProfitLoss)) * 100 : 0;
+  const totalProfitLossPercentage = (totalValue - totalProfitLoss) > 0 ? (totalProfitLoss / (totalValue - totalProfitLoss)) * 100 : 0;
 
   const chartData = portfolio.map(c => ({
     name: c.symbol,
@@ -48,7 +90,10 @@ export default function CryptoPage() {
             <h1 className="text-3xl font-bold dark:text-white text-gray-900">{t('title')}</h1>
             <p className="text-gray-500 dark:text-gray-400">{t('description')}</p>
           </div>
-          <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-colors font-bold">
+          <button
+            onClick={() => { setEditingCrypto(null); setIsModalOpen(true); }}
+            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-colors font-bold"
+          >
             <Plus size={20} />
             {t('add')}
           </button>
@@ -85,9 +130,9 @@ export default function CryptoPage() {
             <tr className="bg-gray-50 dark:bg-gray-700/50">
               <th className="px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-300">{t('asset')}</th>
               <th className="px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-300">{t('quantity')}</th>
-              <th className="px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-300">{t('avgPrice')}</th>
-              <th className="px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-300">{t('currentValue')}</th>
+              <th className="px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-300">Valeur</th>
               <th className="px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-300">{t('profitLoss')}</th>
+              <th className="px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-300 text-right">Actions</th>
             </tr>
           </thead>
                     <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -107,10 +152,15 @@ export default function CryptoPage() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 dark:text-white">{c.quantity}</td>
-                                    <td className="px-6 py-4 dark:text-white">{c.purchasePrice.toLocaleString(locale)} FCFA</td>
                                     <td className="px-6 py-4 dark:text-white font-bold">{c.currentValue.toLocaleString(locale)} FCFA</td>
                                     <td className={`px-6 py-4 font-bold ${c.profitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                         {c.profitLoss >= 0 ? '+' : ''}{c.profitLoss.toLocaleString(locale)}
+                                    </td>
+                                    <td className="px-6 py-4 text-right">
+                                        <div className="flex justify-end gap-2">
+                                            <button onClick={() => { setEditingCrypto(c); setIsModalOpen(true); }} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><Edit2 size={16} /></button>
+                                            <button onClick={() => handleDelete(c.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={16} /></button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))
@@ -147,6 +197,15 @@ export default function CryptoPage() {
                 </div>
             </div>
         </div>
+
+        <Modal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setEditingCrypto(null); }} title={editingCrypto ? "Modifier l'actif Crypto" : "Ajouter un Actif Crypto"}>
+            <CryptoForm
+                initialData={editingCrypto}
+                onSubmit={handleCreateOrUpdate}
+                onCancel={() => { setIsModalOpen(false); setEditingCrypto(null); }}
+                loading={submitting}
+            />
+        </Modal>
       </main>
     </div>
   );

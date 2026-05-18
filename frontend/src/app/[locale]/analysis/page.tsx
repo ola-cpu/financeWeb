@@ -1,4 +1,5 @@
 "use client";
+import { AUTH_USER_ID } from "@/lib/auth";
 
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
@@ -15,7 +16,7 @@ export default function AnalysisPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const userId = 1;
+        const userId = AUTH_USER_ID;
         const [transRes, allocRes] = await Promise.all([
           transactionsApi.getAll(userId),
           assetsApi.getOptimalAllocation(userId)

@@ -25,10 +25,53 @@ export const assetsApi = {
   getFIREStatus: (userId: number, annualExpenses: number) => api.post(`/assets/user/${userId}/fire-status`, { annualExpenses }),
   getOptimalAllocation: (userId: number) => api.get(`/assets/user/${userId}/optimal-allocation`),
   getAll: (userId: number) => api.get(`/assets/user/${userId}`),
+  create: (data: any) => api.post('/assets', data),
+  update: (id: number, data: any) => api.put(`/assets/${id}`, data),
+  delete: (id: number) => api.delete(`/assets/${id}`),
 };
 
 export const transactionsApi = {
   getAll: (userId: number) => api.get(`/transactions/user/${userId}`),
+  create: (data: any) => api.post('/transactions', data),
+  update: (id: number, data: any) => api.put(`/transactions/${id}`, data),
+  delete: (id: number) => api.delete(`/transactions/${id}`),
+};
+
+export const budgetApi = {
+  getAll: (userId: number) => api.get(`/budget?userId=${userId}`),
+  getStatus: (userId: number, month: number, year: number) =>
+    api.get(`/budget/status?userId=${userId}&month=${month}&year=${year}`),
+  create: (data: any) => api.post('/budget', data),
+  update: (id: number, data: any) => api.put(`/budget/${id}`, data),
+  delete: (id: number) => api.delete(`/budget/${id}`),
+};
+
+export const savingsApi = {
+  getAll: (userId: number) => api.get(`/savings?userId=${userId}`),
+  create: (data: any) => api.post('/savings', data),
+  update: (id: number, data: any) => api.put(`/savings/${id}`, data),
+  delete: (id: number) => api.delete(`/savings/${id}`),
+  deposit: (id: number, amount: number) => api.post(`/savings/${id}/deposit`, { amount }),
+};
+
+export const tontinesApi = {
+  getAll: (userId: number) => api.get(`/tontines?userId=${userId}`),
+  create: (data: any) => api.post('/tontines', data),
+  update: (id: number, data: any) => api.put(`/tontines/${id}`, data),
+  delete: (id: number) => api.delete(`/tontines/${id}`),
+  addMember: (id: number, data: any) => api.post(`/tontines/${id}/members`, data),
+  markPayoutDone: (memberId: number) => api.post(`/tontines/members/${memberId}/payout`),
+};
+
+export const cryptoApi = {
+  getPortfolio: (userId: number) => api.get(`/crypto/portfolio?userId=${userId}`),
+  create: (data: any) => api.post('/crypto', data),
+  update: (id: number, data: any) => api.put(`/crypto/${id}`, data),
+  delete: (id: number) => api.delete(`/crypto/${id}`),
+};
+
+export const usersApi = {
+  getDashboardSummary: (userId: number) => api.get(`/users/${userId}/dashboard-summary`),
 };
 
 export const aiApi = {
